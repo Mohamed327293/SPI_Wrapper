@@ -1,113 +1,89 @@
-🧩 SPI Wrapper UVM Verification Environment
-📜 Overview
+# SPI_Wrapper 🧩
 
-This repository presents a comprehensive UVM (Universal Verification Methodology) testbench designed to verify a system integrating an SPI Slave and a Single-Port RAM through an SPI Wrapper interface.
+## UVM Verification Environment for SPI-Wrapper-RAM
 
-The primary goal of this project is to demonstrate modular verification reuse, where component-level UVM environments (for SPI Slave and RAM) are integrated into a system-level environment to validate the SPI Wrapper functionality.
+---
 
-🧠 Project Structure & Verification Phases
+## 📜 Overview
 
-The verification is divided into three main parts, each targeting a specific design block:
+This repository presents a comprehensive Universal Verification Methodology (UVM) testbench for verifying a system that integrates:
+- **SPI Slave**
+- **Single-Port RAM**
+Via an **SPI Wrapper interface**.
 
-🔹 Part 1 – SPI Slave Verification
+**Main Objective:**  
+Demonstrate modular verification reuse, integrating individual UVM environments for component-level verification (SPI Slave and RAM) into a system-level verification environment for the SPI Wrapper.
 
-DUT: SPI Slave core implementing the SPI protocol.
+---
 
-Objective: Verify SPI protocol compliance.
+## 🧠 Project Structure and Verification Phases
 
-Key Features:
+The verification is divided into three main parts, each focusing on a different design block:
 
-Directed and randomized sequences for various SPI transactions:
+### 1️⃣ Part 1 – SPI Slave Verification
+- **DUT:** SPI Slave core (implements Serial Peripheral Interface protocol)
+- **UVM Environment:**  
+  - Validates SPI protocol compliance
+  - Dedicated sequences cover transactions:
+    - Write Address
+    - Write Data
+    - Read Address
+    - Read Data
 
-Write Address
+### 2️⃣ Part 2 – Single-Port RAM Verification
+- **DUT:** Parameterized Single-Port RAM  
+  - Default configuration: `MEM_DEPTH = 256`, `ADDR_SIZE = 8`
+- **UVM Environment:**  
+  - Ensures correct read/write behavior
+  - Checks address range and data coherence via randomized and directed tests
 
-Write Data
+### 3️⃣ Part 3 – SPI Wrapper (System Integration Verification)
+- **DUT:** SPI Wrapper (integration layer between SPI Slave and RAM)
+- **UVM Environment:**  
+  - Top-level verification
+  - Reuses SPI Slave and RAM environments as passive agents
+  - Enables full system-level verification of data integrity and communication flow
 
-Read Address
+---
 
-Read Data
+## 🎯 Verification Highlights
 
-🔹 Part 2 – Single-Port RAM Verification
+### Coverage Goals
 
-DUT: Parameterized Single-Port RAM
+- **Code Coverage:**  
+  - 100% line, toggle, branch, and expression coverage
+- **Functional Coverage:**  
+  - Coverpoints on interface signals (`rx_data`, `SS_n`, `MOSI`, etc.)
+  - Cross-coverage between command types (`din[9:8]`, `MOSI` command bits) and control signals (`rx_valid`, `tx_valid`)
+  - Sequential coverage for transaction orderings (e.g., Write → Read)
 
-MEM_DEPTH = 256, ADDR_SIZE = 8
+### Assertions (SystemVerilog Assertions - SVA)
 
-Objective: Validate memory behavior and integrity.
+- **Safety Checks:**  
+  - Reset behavior (all outputs de-asserted on reset)
+- **Liveness Checks:**  
+  - Commands must trigger corresponding responses (write → read)
+- **Temporal Checks:**  
+  - Timing relations between critical signals (`rx_valid`, `tx_valid`, etc.)
 
-Key Features:
+### Sequences and Scenarios
 
-Randomized and directed tests
+- Multiple parameterized and randomized sequences:
+  - `reset_sequence`
+  - `write_only_sequence`
+  - `read_only_sequence`
+  - `write_read_sequence` (randomized operation selection)
 
-Address range checking
+---
 
-Read/Write data coherence
+## 👥 Project Team
 
-🔹 Part 3 – SPI Wrapper (System Integration Verification)
+- **Mohamed Mostafa**
+- **Mohamed Rafaat El Sheikh**
+- **Youssef Tantawy**
 
-DUT: SPI Wrapper (integration layer between SPI Slave and RAM).
+Developed with passion for verification excellence and UVM reusability.
 
-Objective: Verify end-to-end data flow and integration behavior.
 
-Key Features:
 
-Reuse of SPI Slave and RAM UVM environments as passive agents
-
-Full system-level verification of communication and data integrity
-
-🎯 Verification Highlights
-✅ Coverage Goals
-
-To ensure comprehensive verification, the following targets were achieved:
-
-Code Coverage:
-
-100% line, toggle, branch, and expression coverage.
-
-Functional Coverage:
-
-Coverpoints on interface signals (rx_data, SS_n, MOSI, etc.)
-
-Cross-coverage between command types (din[9:8], MOSI bits) and control signals (rx_valid, tx_valid)
-
-Sequential coverage for transaction orderings such as:
-
-Write Address → Write Data → Read Address → Read Data
-
-🧩 Assertions (SVA)
-
-SystemVerilog Assertions were implemented to ensure protocol and timing correctness:
-
-Safety Checks: Validate reset behavior (outputs de-assert after reset).
-
-Liveness Checks: Ensure that each command triggers a valid response.
-
-Temporal Checks: Verify timing relations between key handshake signals (rx_valid, tx_valid, etc.).
-
-🔁 Sequences & Scenarios
-
-A diverse set of sequences ensures both directed and randomized verification:
-
-Sequence Name	Description
-reset_sequence	Validates correct system reset behavior.
-write_only_sequence	Tests write transactions exclusively.
-read_only_sequence	Tests read transactions exclusively.
-write_read_sequence	Randomized mix of read and write operations with probabilistic selection.
-👥 Project Team
-Name	Role
-Mohamed Mostafa Mohamed	UVM Testbench Developer
-Rafaat El Sheikh	Design & Verification Engineer
-Youssef Tantawy	Verification Engineer
-💡 Key Takeaway
-
-This project showcases verification reusability and modularity through a layered UVM architecture, ensuring scalable and maintainable test environments for complex system-level verification.
-
-🛠️ Tools & Technologies
-
-Language: SystemVerilog
-
-Methodology: UVM (IEEE 1800.2)
-
-Simulator: Mentor QuestaSim / Synopsys VCS
-
-Version Control: Git & GitHub
+**For questions or contributions, feel free to open an Issue or Pull Request!**
